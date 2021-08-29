@@ -3,7 +3,6 @@ package org.czh.build.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.czh.build.enums.FieldTypeEnum;
 import org.czh.commons.annotations.tag.NotNullTag;
 import org.czh.commons.entity.IBaseEntity;
 import org.czh.commons.validate.EmptyAssert;
@@ -38,7 +37,7 @@ public class StatusEntity implements IBaseEntity {
 
     private boolean hasUpdateTimeCol; // 是否有更新时间列
     private boolean hasSelfUpdateTimeCol; // 是否有自维护更新时间列
-    private ColumnEntity selfUpdateTimeCol; // 自维护更新时间列
+    private ColumnEntity updateTimeCol; // 自维护更新时间列
 
     private StatusEntity() {
     }
@@ -60,11 +59,33 @@ public class StatusEntity implements IBaseEntity {
     public void configColumnStatus(@NotNullTag ColumnEntity columnEntity) {
         EmptyAssert.isNotNull(columnEntity);
 
-        // 是BigDecimal类型，需要导入 java.math.BigDecimal 类
-        if (FieldTypeEnum.FIELD_TYPE_BIG_DECIMAL.key.equals(columnEntity.getFieldType())) {
+        if (columnEntity.isWhetherBigDecimal()) {
             this.hasBigDecimal = true;
-        } else if (FieldTypeEnum.FIELD_TYPE_DATE.key.equals(columnEntity.getFieldType())) {
+        }
+        if (columnEntity.isWhetherDate()) {
             this.hasDate = true;
+        }
+        if (columnEntity.isWhetherAutoIncrementCol() && columnEntity.isWhetherPkCol()) {
+            this.hasPkCol = true;
+            this.pkCol = columnEntity;
+        }
+        if (columnEntity.isWhetherVersionCol()) {
+            this.hasVersionCol = true;
+            this.versionCol = columnEntity;
+        }
+        if (columnEntity.isWhetherInsertTimeCol()) {
+            this.hasInsertTimeCol = true;
+            if (columnEntity.isWhetherSelfTimeCol()) {
+                this.hasSelfInsertTimeCol = true;
+            }
+            this.insertTimeCol = columnEntity;
+        }
+        if (columnEntity.isWhetherUpdateTimeCol()) {
+            this.hasUpdateTimeCol = true;
+            if (columnEntity.isWhetherSelfTimeCol()) {
+                this.hasSelfUpdateTimeCol = true;
+            }
+            this.updateTimeCol = columnEntity;
         }
     }
 }

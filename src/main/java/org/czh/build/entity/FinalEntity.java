@@ -41,6 +41,7 @@ public final class FinalEntity implements IBaseEntity {
     private ExistsEntity existsEntity;
     private MergeEntity mergeEntity;
     private List<ColumnEntity> columnEntityList;
+
     private FinalEntity() {
     }
 
@@ -66,7 +67,7 @@ public final class FinalEntity implements IBaseEntity {
         // 开始配置表名称信息实体
         configTableName(configEntity, tableMetaEO);
         // 开始配置字段信息实体
-        configColumn(columnMetaEOList);
+        configColumn(configEntity, columnMetaEOList);
     }
 
     private void configTableName(ConfigEntity configEntity, TableMetaEO tableMetaEO) {
@@ -81,13 +82,13 @@ public final class FinalEntity implements IBaseEntity {
         this.mergeEntity = MergeEntity.init(this.existsEntity, this.fileEntity);
     }
 
-    private void configColumn(List<ColumnMetaEO> columnMetaEOList) {
+    private void configColumn(ConfigEntity configEntity, List<ColumnMetaEO> columnMetaEOList) {
         this.columnEntityList = new ArrayList<>(columnMetaEOList.size());
 
         for (ColumnMetaEO columnMetaEO : columnMetaEOList) {
             EmptyAssert.isNotNull(columnMetaEO);
 
-            ColumnEntity columnEntity = ColumnEntity.init(columnMetaEO);
+            ColumnEntity columnEntity = ColumnEntity.init(configEntity, columnMetaEO);
             this.statusEntity.configColumnStatus(columnEntity);
             this.columnEntityList.add(columnEntity);
         }

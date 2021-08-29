@@ -66,6 +66,11 @@ public final class ConfigEntity implements IBaseEntity {
      */
     private BuildTableConfig buildTableConfig;
 
+    /**
+     * 组件生成字段规则配置信息实体
+     */
+    private BuildColumnConfig buildColumnConfig;
+
     private ConfigEntity() {
     }
 
@@ -84,6 +89,7 @@ public final class ConfigEntity implements IBaseEntity {
 
         configEntity.buildTypeConfig = BuildTypeConfig.init();
         configEntity.buildTableConfig = BuildTableConfig.init();
+        configEntity.buildColumnConfig = BuildColumnConfig.init();
 
         return configEntity;
     }

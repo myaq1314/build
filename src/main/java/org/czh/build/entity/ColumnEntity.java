@@ -3,6 +3,7 @@ package org.czh.build.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.czh.build.entity.config.ConfigEntity;
 import org.czh.build.entity.eo.ColumnMetaEO;
 import org.czh.build.enums.ColumnTypeEnum;
 import org.czh.build.enums.FieldTypeEnum;
@@ -26,39 +27,70 @@ public class ColumnEntity implements IBaseEntity {
 
     private static final long serialVersionUID = 8653733190112788707L;
 
-    private String columnName; // 列名称
-    private String fieldName; // 属性名称
-    private String enumName; // 枚举项名称
-    private String getterMethod; // Getter方法名称
-    private String setterMethod; // Setter方法名称
+    private String columnName; // 列名称 eg id、name、sex、stock_code、sum_num_2021、avg_num2022、studentName
+    private boolean whetherVersionCol; // 是否是版本列
+    private boolean whetherInsertTimeCol; // 是否是插入时间列
+    private boolean whetherUpdateTimeCol; // 是否是更新时间列
+    private String fieldName; // 属性名称 eg id、name、sex、stockCode、sumNum2021、avgNum2022、studentName
+    private String enumName; // 枚举项名称 eg ID、NAME、SEX、STOCK_CODE、SUM_NUM_2021、AVG_NUM2022、STUDENT_NAME
+    private String getterMethod; // Getter方法名称 eg getId、getName、getSex、getStockCode、getSumNum021、getAvgNum2022、getStudentName
+    private String setterMethod; // Setter方法名称 eg setId、setName、setSex、setStockCode、setSumNum021、setAvgNum2022、setStudentName
 
-    private String columnType; // 列类型
+    private String dataType; // 列类型 eg bigint、date、varchar、decimal、char、datetime
+    private String columnType; // 列类型 eg bigint unsigned、date、varchar(10)、decimal(10,2)、char(16)、datetime
     private String fieldType; // 属性类型
+    private boolean whetherBigDecimal; // 是否是 BigDecimal 类型
+    private boolean whetherDate; // 是否是 Date 类型
     private boolean isVarcharType; // 是否是字符串
 
-    private String columnComment; // 列描述
+    private String isNullable; // 是否允许为空 eg NO、YES
+    private String columnDefault; // 默认值 eg null、0、1970-01-01、0.00、空字符串、CURRENT_TIMESTAMP、
+    private String characterMaximumLength; // 字符型长度 eg 32 varchar(32)
+    private String numericPrecision; // 列精确度 eg 10 int(10)
+    private String numericScale; // 列刻度 eg 2 decimal(18, 2)
+    private String columnKey; // Key eg PRI 主键，MUL 普通索引，UNI 唯一索引，
+    private String extra; // 特殊列 eg auto_increment 自增， DEFAULT_GENERATED 插入时间， DEFAULT_GENERATED on update CURRENT_TIMESTAMP 最后一次更新时间
+
+    private String columnComment; // 列描述 eg 主键
     private String fieldComment; // 属性描述
     private String replenishComment; // 补充描述
+    private boolean whetherAutoIncrementCol; // 是否是自增列
+    private boolean whetherPkCol; // 是否是主键索引
 
+    private boolean whetherSelfTimeCol; // 是否是自维护的时间列
 
-    public static ColumnEntity init(@NotNullTag ColumnMetaEO columnMetaEO) {
-        EmptyAssert.allNotNull(columnMetaEO);
+    public static ColumnEntity init(@NotNullTag ConfigEntity configEntity, @NotNullTag ColumnMetaEO columnMetaEO) {
+        EmptyAssert.allNotNull(configEntity, columnMetaEO);
 
         ColumnEntity columnEntity = new ColumnEntity();
 
         columnEntity.columnName = columnMetaEO.getColumnName();
+        columnEntity.whetherVersionCol = configEntity.getBuildColumnConfig().getVersionSet().contains(columnEntity.columnName);
+        columnEntity.whetherInsertTimeCol = configEntity.getBuildColumnConfig().getInsertTimeSet().contains(columnEntity.columnName);
+        columnEntity.whetherUpdateTimeCol = configEntity.getBuildColumnConfig().getUpdateTimeSet().contains(columnEntity.columnName);
         columnEntity.fieldName = calculateFieldName(columnMetaEO.getColumnName());
         columnEntity.enumName = calculateEnumName(columnEntity.columnName);
         columnEntity.getterMethod = calculateGetterMethod(columnEntity.fieldName);
         columnEntity.setterMethod = calculateSetterMethod(columnEntity.fieldName);
 
-        columnEntity.columnType = columnMetaEO.getDataType();
+        columnEntity.dataType = columnMetaEO.getDataType();
+        columnEntity.columnType = columnMetaEO.getColumnType();
         columnEntity.fieldType = calculateFieldType(columnMetaEO.getDataType().trim().toLowerCase(), columnMetaEO.getNumericScale()).key;
+        columnEntity.whetherBigDecimal = FieldTypeEnum.FIELD_TYPE_BIG_DECIMAL.key.equals(columnEntity.fieldType);
+        columnEntity.whetherDate = FieldTypeEnum.FIELD_TYPE_DATE.key.equals(columnEntity.fieldType);
         columnEntity.isVarcharType = FieldTypeEnum.FIELD_TYPE_STRING.key.equals(columnEntity.fieldType);
+
+        columnEntity.isNullable = columnMetaEO.getIsNullable();
+        columnEntity.columnDefault = columnMetaEO.getColumnDefault();
+        columnEntity.characterMaximumLength = columnMetaEO.getCharacterMaximumLength();
+        columnEntity.numericPrecision = columnMetaEO.getNumericPrecision();
+        columnEntity.numericScale = columnMetaEO.getNumericScale();
+        columnEntity.columnKey = columnMetaEO.getColumnKey();
+        columnEntity.extra = columnMetaEO.getExtra();
 
         columnEntity.columnComment = columnMetaEO.getColumnComment();
         columnEntity.fieldComment = calculateFieldComment(columnMetaEO);
-        columnEntity.replenishComment = calculateReplenishComment(columnMetaEO);
+        columnEntity.configReplenishComment();
 
         return columnEntity;
     }
@@ -198,79 +230,71 @@ public class ColumnEntity implements IBaseEntity {
         return fieldComment;
     }
 
-    private static String calculateReplenishComment(ColumnMetaEO columnMetaEO) {
-        // 特殊列 eg auto_increment 自增， DEFAULT_GENERATED 插入时间， DEFAULT_GENERATED on update CURRENT_TIMESTAMP 最后一次更新时间
-        String extra = columnMetaEO.getExtra();
-        // 特殊key eg PRI 主键，MUL 普通索引，UNI 唯一索引，
-        String columnKey = columnMetaEO.getColumnKey();
-        // 列类型 eg bigint unsigned、date、varchar(10)、decimal(10,2)、char(16)、datetime
-        String columnType = columnMetaEO.getColumnType();
-        // 是否允许为空 eg NO YES
-        String isNullable = columnMetaEO.getIsNullable();
-        // 默认值 eg null、0、1970-01-01、0.00、空字符串、CURRENT_TIMESTAMP、
-        String columnDefault = columnMetaEO.getColumnDefault();
-
+    private void configReplenishComment() {
         StringBuilder builder = new StringBuilder();
-        if (EmptyValidate.isNotBlank(extra)) {
+        if (EmptyValidate.isNotBlank(this.extra)) {
             builder.append("、");
-            if ("auto_increment".equalsIgnoreCase(extra)) {
+            if ("auto_increment".equalsIgnoreCase(this.extra)) {
                 builder.append("自增");
-            } else if ("DEFAULT_GENERATED".equalsIgnoreCase(extra)) {
+                this.whetherAutoIncrementCol = true;
+            } else if ("DEFAULT_GENERATED".equalsIgnoreCase(this.extra)) {
                 builder.append("默认第一次插入数据时间");
-            } else if ("DEFAULT_GENERATED on update CURRENT_TIMESTAMP".equalsIgnoreCase(extra)) {
+            } else if ("DEFAULT_GENERATED on update CURRENT_TIMESTAMP".equalsIgnoreCase(this.extra)) {
                 builder.append("默认最后一次更新数据时间");
             } else {
-                throw new RuntimeException("记录未知的 extra 类型：" + extra);
+                throw new RuntimeException("记录未知的 extra 类型：" + this.extra);
             }
         }
 
-        if (EmptyValidate.isNotBlank(columnKey)) {
+        if (EmptyValidate.isNotBlank(this.columnKey)) {
             builder.append("、");
-            if ("PRI".equalsIgnoreCase(columnKey)) {
+            if ("PRI".equalsIgnoreCase(this.columnKey)) {
                 builder.append("主键索引");
-            } else if ("MUL".equalsIgnoreCase(columnKey)) {
+                this.whetherPkCol = true;
+            } else if ("MUL".equalsIgnoreCase(this.columnKey)) {
                 builder.append("普通索引");
-            } else if ("UNI".equalsIgnoreCase(columnKey)) {
+            } else if ("UNI".equalsIgnoreCase(this.columnKey)) {
                 builder.append("唯一索引");
             } else {
-                throw new RuntimeException("记录未知的 columnKey 类型：" + columnKey);
+                throw new RuntimeException("记录未知的 columnKey 类型：" + this.columnKey);
             }
         }
 
-        if (EmptyValidate.isNotBlank(columnType)) {
-            builder.append("、").append(columnType);
+        if (EmptyValidate.isNotBlank(this.columnType)) {
+            builder.append("、").append(this.columnType);
         }
 
-        if (EmptyValidate.isNotBlank(isNullable)) {
+        if (EmptyValidate.isNotBlank(this.isNullable)) {
             builder.append("、");
-            if ("YES".equalsIgnoreCase(isNullable)) {
+            if ("YES".equalsIgnoreCase(this.isNullable)) {
                 builder.append("可为空");
-            } else if ("NO".equalsIgnoreCase(isNullable)) {
+            } else if ("NO".equalsIgnoreCase(this.isNullable)) {
                 builder.append("非空");
             } else {
-                throw new RuntimeException("记录未知的 isNullable 类型：" + isNullable);
+                throw new RuntimeException("记录未知的 isNullable 类型：" + this.isNullable);
             }
         }
 
         builder.append("、");
-        if (EmptyValidate.isNull(columnDefault)) {
-            if ("auto_increment".equalsIgnoreCase(extra)) {
+        if (EmptyValidate.isNull(this.columnDefault)) {
+            if ("auto_increment".equalsIgnoreCase(this.extra)) {
                 builder.append("默认为自增");
             } else {
                 builder.append("默认为null");
             }
-        } else if (EmptyValidate.isBlank(columnDefault)) {
+        } else if (EmptyValidate.isBlank(this.columnDefault)) {
             builder.append("默认为空字符串");
         } else {
-            if ("CURRENT_TIMESTAMP".equalsIgnoreCase(columnDefault)) {
+            if ("CURRENT_TIMESTAMP".equalsIgnoreCase(this.columnDefault)) {
                 builder.append("默认为").append("当前时间戳");
+                this.whetherSelfTimeCol = true;
             } else {
-                builder.append("默认为").append(columnDefault);
+                builder.append("默认为").append(this.columnDefault);
             }
         }
 
         String replenishComment = builder.toString();
         EmptyAssert.isNotBlank(replenishComment);
-        return " [ " + replenishComment.substring(1) + " ] ";
+        this.replenishComment = " [ " + replenishComment.substring(1) + " ] ";
     }
 }
