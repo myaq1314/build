@@ -2,6 +2,7 @@ package org.czh.build.example.service.impl;
 
 import org.czh.build.example.dao.TbExampleInfoDao;
 import org.czh.build.example.entity.eo.TbExampleInfoEO;
+import org.czh.build.example.service.TbExampleInfoService;
 import org.czh.commons.service.impl.BaseCommonServiceImpl;
 import org.springframework.stereotype.Service;
 

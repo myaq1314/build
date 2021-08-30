@@ -162,6 +162,9 @@ public class ImportListEntity implements IBaseEntity {
         if (!packageEntity.getDao().equals(packageEntity.getServiceImpl())) {
             importListEntity.queryServiceImplList.add(importEntity.getDao());
         }
+        if (!packageEntity.getService().equals(packageEntity.getServiceImpl())) {
+            importListEntity.queryServiceImplList.add(importEntity.getService());
+        }
         Collections.addAll(importListEntity.queryServiceImplList,
                 "org.springframework.stereotype.Service",
                 "org.czh.commons.service.impl.BaseQueryServiceImpl"
@@ -175,6 +178,9 @@ public class ImportListEntity implements IBaseEntity {
         if (!packageEntity.getDao().equals(packageEntity.getServiceImpl())) {
             importListEntity.commonServiceImplList.add(importEntity.getDao());
         }
+        if (!packageEntity.getService().equals(packageEntity.getServiceImpl())) {
+            importListEntity.commonServiceImplList.add(importEntity.getService());
+        }
         Collections.addAll(importListEntity.commonServiceImplList,
                 "org.springframework.stereotype.Service",
                 "org.czh.commons.service.impl.BaseCommonServiceImpl"
@@ -187,6 +193,9 @@ public class ImportListEntity implements IBaseEntity {
         }
         if (!packageEntity.getDao().equals(packageEntity.getServiceImpl())) {
             importListEntity.primaryServiceImplList.add(importEntity.getDao());
+        }
+        if (!packageEntity.getService().equals(packageEntity.getServiceImpl())) {
+            importListEntity.primaryServiceImplList.add(importEntity.getService());
         }
         Collections.addAll(importListEntity.primaryServiceImplList,
                 "org.springframework.stereotype.Service",
