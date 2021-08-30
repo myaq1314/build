@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
  * email : 916419307@qq.com
  */
 @Service
-public final class TbExampleInfoServiceImpl
-        extends BaseCommonServiceImpl<TbExampleInfoDao, TbExampleInfoEO>
+public final class TbExampleInfoServiceImpl extends BaseCommonServiceImpl<TbExampleInfoDao, TbExampleInfoEO>
         implements TbExampleInfoService {
 
 }

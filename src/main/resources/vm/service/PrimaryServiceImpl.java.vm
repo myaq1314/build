@@ -11,8 +11,7 @@ import ${importEach};
  * email : ${authEntity.authEmail}
  */
 @Service
-public final class ${nameEntity.serviceImpl}
-    extends BasePrimaryServiceImpl<${nameEntity.dao}, ${nameEntity.entity}>
+public final class ${nameEntity.serviceImpl} extends BasePrimaryServiceImpl<${nameEntity.dao}, ${nameEntity.entity}>
     implements ${nameEntity.service} {
 
 }
