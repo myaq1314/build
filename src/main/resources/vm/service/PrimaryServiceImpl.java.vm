@@ -12,6 +12,6 @@ import ${importEach};
  */
 @Service
 public final class ${nameEntity.serviceImpl} extends BasePrimaryServiceImpl<${nameEntity.dao}, ${nameEntity.entity}>
-    implements ${nameEntity.service} {
+        implements ${nameEntity.service} {
 
 }
