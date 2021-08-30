@@ -34,7 +34,6 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode(callSuper = true)
 public final class MergeEntity extends ElementEntity {
 
-
     private static final long serialVersionUID = 690901932790614029L;
 
     private MergeEntity() {

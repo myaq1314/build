@@ -71,6 +71,11 @@ public final class ConfigEntity implements IBaseEntity {
      */
     private BuildColumnConfig buildColumnConfig;
 
+    /**
+     * velocity模板配置信息实体
+     */
+    private VelocityConfig velocityConfig;
+
     private ConfigEntity() {
     }
 
@@ -90,6 +95,8 @@ public final class ConfigEntity implements IBaseEntity {
         configEntity.buildTypeConfig = BuildTypeConfig.init();
         configEntity.buildTableConfig = BuildTableConfig.init();
         configEntity.buildColumnConfig = BuildColumnConfig.init();
+
+        configEntity.velocityConfig = VelocityConfig.init();
 
         return configEntity;
     }

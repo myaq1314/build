@@ -17,6 +17,8 @@ public enum BuildTypeEnum implements IBaseEnum {
 
     ignore, // 忽略
 
+    delete, // 删除
+
     // 占位符
     ;
 

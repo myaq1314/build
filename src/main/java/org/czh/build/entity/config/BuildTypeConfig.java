@@ -29,13 +29,7 @@ public final class BuildTypeConfig extends ElementEntity {
     }
 
     public static BuildTypeConfig init() {
-        BuildTypeConfig buildTypeConfig = new BuildTypeConfig();
-
-        buildTypeConfig.enums = BuildTypeEnum.replace.getName();
-        buildTypeConfig.baseEntity = BuildTypeEnum.replace.getName();
-        buildTypeConfig.baseMapping = BuildTypeEnum.replace.getName();
-
-        return buildTypeConfig;
+        return new BuildTypeConfig();
     }
 
     public BuildTypeConfig configCreateType(@NotNullTag ElementEnum elementEnum,

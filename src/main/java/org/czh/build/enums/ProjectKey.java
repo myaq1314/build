@@ -15,7 +15,7 @@ import org.czh.commons.enums.parent.IKeyEnum;
 @SuppressWarnings("unused")
 public enum ProjectKey implements IKeyEnum<String> {
 
-    BUILD_DEMO_PROJECT("buildDemoProject"), // 实例项目
+    BUILD_DEMO_PROJECT("buildDemoProject"), // 示例项目
 
     // 占位符
     ;

@@ -1,0 +1,19 @@
+package ${packageEntity.entity};
+
+#foreach(${importEach} in ${importListEntity.entityList})
+import ${importEach};
+#end
+
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 实体对象
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public final class ${nameEntity.entity} extends ${nameEntity.baseEntity} {
+
+}

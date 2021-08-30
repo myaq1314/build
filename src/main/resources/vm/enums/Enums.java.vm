@@ -1,0 +1,41 @@
+package ${packageEntity.enums};
+
+#foreach(${importEach} in ${importListEntity.enumsList})
+import ${importEach};
+#end
+
+#set($flag = false)
+#if(${statusEntity.hasBigDecimal})
+import java.math.BigDecimal;
+#set($flag = true)
+#end
+#if(${statusEntity.hasDate})
+import java.util.Date;
+#set($flag = true)
+#end
+#if($flag)
+
+#end
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 字段枚举
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+@Getter
+@AllArgsConstructor
+public enum ${nameEntity.enums} implements IColumnEnum {
+
+#foreach(${columnEntity} in ${columnEntityList})
+    // ${columnEntity.fieldComment} ${columnEntity.replenishComment}
+    ${columnEntity.enumName}("${columnEntity.columnName}", "${columnEntity.fieldName}", ${columnEntity.fieldType}.class),
+
+#end
+    // 占位符
+    ;
+
+    public final String column;
+    public final String field;
+    public final Class<?> type;
+
+}

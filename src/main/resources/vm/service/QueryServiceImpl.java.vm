@@ -1,0 +1,18 @@
+package ${packageEntity.serviceImpl};
+
+#foreach(${importEach} in ${importListEntity.queryServiceImplList})
+import ${importEach};
+#end
+
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 服务类基础实现类
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+@Service
+public final class ${nameEntity.serviceImpl}
+    extends BaseQueryServiceImpl<${nameEntity.dao}, ${nameEntity.entity}>
+    implements ${nameEntity.service} {
+
+}

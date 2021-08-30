@@ -1,0 +1,35 @@
+package ${packageEntity.baseEntity};
+
+#foreach(${importEach} in ${importListEntity.commonBaseEntityList})
+import ${importEach};
+#end
+
+#set($flag = false)
+#if(${statusEntity.hasBigDecimal})
+import java.math.BigDecimal;
+#set($flag = true)
+#end
+#if(${statusEntity.hasDate})
+import java.util.Date;
+#set($flag = true)
+#end
+#if($flag)
+
+#end
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 实体对象基类
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public abstract class ${nameEntity.baseEntity} extends BaseCommonEO {
+
+#foreach(${columnEntity} in ${columnEntityList})
+    // ${columnEntity.fieldComment} ${columnEntity.replenishComment}
+    protected ${columnEntity.fieldType} ${columnEntity.fieldName};
+
+#end
+}

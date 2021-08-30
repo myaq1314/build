@@ -1,0 +1,16 @@
+package ${packageEntity.dao};
+
+#foreach(${importEach} in ${importListEntity.primaryDaoList})
+import ${importEach};
+#end
+
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 数据访问对象基础接口
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+@Mapper
+public interface ${nameEntity.dao} extends IBasePrimaryDao<${nameEntity.entity}> {
+
+}

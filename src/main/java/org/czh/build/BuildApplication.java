@@ -37,10 +37,9 @@ public class BuildApplication {
         configEntity.getBuildTableConfig()
                 // 配置完整表名称
                 .configTableName(
-                        "tb_student_info",
-                        "tb_teacher_info",
-                        "tb_stock_info",
-                        "tb_stock_price_detail",
+                        "tb_example_detail",
+                        "tb_example_info",
+                        "tb_example_detail_view",
 
                         // 占位符 会自动将null过滤掉
                         null)
@@ -48,13 +47,12 @@ public class BuildApplication {
                 .configRegex(
                         "^tb_[\\S]*?$", // 前缀匹配规则
                         "^[\\S]*?_info$", // 后缀匹配规则
-                        "^tb_[\\S]*?_info$", // 前缀后缀匹配规则
+                        "^tb_[\\S]*?_view$", // 前缀后缀匹配规则
 
                         // 占位符 会自动将null过滤掉
                         null);
 
         new BuildService().startBuild(configEntity);
     }
-
 
 }

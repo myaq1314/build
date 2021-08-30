@@ -30,13 +30,13 @@ public final class FinalEntity implements IBaseEntity {
     private AuthEntity authEntity;
 
     private PackageEntity packageEntity;
-
     private PathEntity pathEntity;
     private StatusEntity statusEntity;
     private TableEntity tableEntity;
     private NameEntity nameEntity;
     private AutoWiredEntity autoWiredEntity;
     private ImportEntity importEntity;
+    private ImportListEntity importListEntity;
     private FileEntity fileEntity;
     private ExistsEntity existsEntity;
     private MergeEntity mergeEntity;
@@ -77,6 +77,7 @@ public final class FinalEntity implements IBaseEntity {
         this.nameEntity = NameEntity.init(configEntity, this.tableEntity);
         this.autoWiredEntity = AutoWiredEntity.init(configEntity, this.nameEntity);
         this.importEntity = ImportEntity.init(this.packageEntity, this.nameEntity);
+        this.importListEntity = ImportListEntity.init(this.packageEntity, this.importEntity);
         this.fileEntity = FileEntity.init(configEntity, this.pathEntity, this.nameEntity);
         this.existsEntity = ExistsEntity.init(this.fileEntity);
         this.mergeEntity = MergeEntity.init(this.existsEntity, this.fileEntity);

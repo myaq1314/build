@@ -18,6 +18,7 @@ import java.util.List;
 public class BuildService {
 
     private final QueryService queryService = new QueryService();
+    private final WriteService writeService = new WriteService();
 
     public void startBuild(@NotNullTag ConfigEntity configEntity) {
         EmptyAssert.isNotNull(configEntity);
@@ -35,7 +36,8 @@ public class BuildService {
             // 开始配置表信息实体
             finalEntity.configTable(configEntity, tableMetaEO, columnMetaEOList);
 
-            System.out.println(finalEntity);
+            // 开始对外输出文件
+            writeService.startOutputFile(configEntity, finalEntity);
         }
     }
 }

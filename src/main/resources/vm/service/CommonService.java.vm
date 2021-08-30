@@ -1,0 +1,15 @@
+package ${packageEntity.service};
+
+#foreach(${importEach} in ${importListEntity.commonServiceList})
+import ${importEach};
+#end
+
+/**
+ * @author : ${authEntity.authName}
+ * description : [ ${tableEntity.beanComment} ] 服务类基础接口
+ * date : ${authEntity.buildDate}
+ * email : ${authEntity.authEmail}
+ */
+public interface ${nameEntity.service} extends IBaseCommonService<${nameEntity.entity}> {
+
+}

@@ -3,13 +3,11 @@ package org.czh.build.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.czh.commons.constant.DateConstant;
 import org.czh.commons.entity.IBaseEntity;
-import org.czh.commons.utils.FieldUtil;
+import org.czh.commons.utils.DateUtil;
 import org.czh.commons.utils.PropertyUtil;
 import org.czh.commons.validate.EmptyAssert;
-
-import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * @author : czh
@@ -34,15 +32,19 @@ public final class AuthEntity implements IBaseEntity {
      */
     private String authEmail;
 
+    /**
+     * 构建日期，格式 yyyy/MM/dd
+     */
+    private String buildDate;
+
     private AuthEntity() {
     }
 
     public static AuthEntity init() {
         AuthEntity authEntity = new AuthEntity();
-        List<Field> fieldList = FieldUtil.queryFieldList(AuthEntity.class, field -> !field.getName().equals("serialVersionUID"));
-        for (Field field : fieldList) {
-            FieldUtil.writeField(authEntity, field, getProperty(field.getName()));
-        }
+        authEntity.authName = getProperty("authName");
+        authEntity.authEmail = getProperty("authEmail");
+        authEntity.buildDate = DateUtil.getNowText(DateConstant.DATE_SLASH());
         return authEntity;
     }
 
